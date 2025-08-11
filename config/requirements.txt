@@ -1,0 +1,15 @@
+# 智能滚动截图工具 v3.0.6 依赖包
+# 核心依赖
+pillow>=9.0.0
+pyautogui>=0.9.54
+numpy>=1.21.0
+pywinauto>=0.6.8
+keyboard>=0.13.5
+opencv-python>=4.5.0
+
+# 扩展功能依赖 (取证模块)
+psutil>=5.8.0
+
+# 开发和测试依赖
+pytest>=7.0.0
+pytest-cov>=4.0.0

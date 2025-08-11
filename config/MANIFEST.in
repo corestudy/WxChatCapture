@@ -1,0 +1,43 @@
+# 包含额外文件到分发包中
+
+# 文档文件
+include README.md
+include CHANGELOG.md
+include CODE_ORGANIZATION_REPORT.md
+include LICENSE
+
+# 配置文件
+include config/requirements.txt
+include config/pyproject.toml
+include config/Makefile
+include .pre-commit-config.yaml
+
+# 文档目录
+recursive-include docs_unified *.md
+recursive-include docs *.md *.py
+
+# 测试文件
+recursive-include tests *.py
+
+# 工具文件
+recursive-include tools *.py *.md
+
+# 源代码
+recursive-include src *.py
+
+# 排除不需要的文件
+exclude .gitignore
+exclude *.bat
+exclude *.py[co]
+exclude acli.md
+
+# 排除临时文件
+global-exclude tmp_*
+global-exclude temp_*
+global-exclude *.tmp
+global-exclude *.temp
+global-exclude __pycache__
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude .DS_Store
+global-exclude Thumbs.db
