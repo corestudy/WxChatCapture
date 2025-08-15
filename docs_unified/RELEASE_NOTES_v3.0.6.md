@@ -14,17 +14,17 @@
 - 新增 LICENSE（MIT）
 
 ### 变更
-- 单文档策略：将简明使用说明合并至根 README，删除 docs_unified/README.md，修复仓库内所有相关引用
+- 单文档策略：统一文档至 docs_unified/README.md，修复仓库内所有相关引用
 - 入口点修复：src/main.py 新增 main() 函数，pyproject 脚本入口 smart-screenshot = "src.main:main" 可用
 - 构建配置标准化：将 pyproject.toml 移至仓库根；设置 setuptools src 布局（package-dir={"" : "src"}）
 - MANIFEST.in 调整：包含 docs_unified/*.md 与 images/*.svg；打包内容更清晰
-- Makefile 调整：install 使用 config/requirements.txt；docs 目标指向 README.md；quick-start 指向 tools/quick_start.py
-- Windows 脚本修复：scripts/run_simple.bat 去除硬编码路径，改为 python tools\simple_test.py
+- Makefile 调整：install 使用 config/requirements.txt；docs 目标指向 docs_unified/README.md；quick-start 指向 tools/quick_start.py
+- Windows 脚本修复：统一为 scripts/run.bat（simple 子命令运行简单测试），去除硬编码路径
 - 版本一致性：统一为 v3.0.6（src/__init__.py、src/main.py、src/utils.py、src/config.py、tests/__init__.py）
 
 ### 修复
 - 修复 README 中失效链接，默认导航到根 README
-- 修复历史报告中的文档中心引用，避免 docs_unified/README.md 死链
+- 修复历史报告中的文档中心引用，确保 docs_unified/README.md 可用
 - 解决入口脚本与 pyproject 控制台入口不匹配导致的无法启动问题
 
 ## 兼容性
@@ -52,4 +52,4 @@ pip install -r requirements.txt
 - 屏幕自动化依赖桌面环境权限，服务器或无头环境请勿运行 GUI 程序
 
 ## 致谢
-感谢使用与反馈！如遇问题请在 Issues 中附上系统版本、Python 版本和简要复现步骤。
+感谢使用与反馈！如遇问题请在 [GitHub Issues](https://github.com/smartscreenshot/smart-screenshot-tool/issues) 中附上系统版本、Python 版本和简要复现步骤。

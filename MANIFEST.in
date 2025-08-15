@@ -1,10 +1,11 @@
 # 包含额外文件到分发包中
 
 # 文档文件
-include README.md
-include CHANGELOG.md
-include CODE_ORGANIZATION_REPORT.md
+include docs_unified/README.md
+include docs_unified/CHANGELOG.md
+include docs_unified/CODE_ORGANIZATION_REPORT.md
 include LICENSE
+include requirements.txt
 
 # 配置文件
 include config/requirements.txt
@@ -17,7 +18,8 @@ recursive-include images *.svg *.png
 
 # 测试与工具
 recursive-include tests *.py
-recursive-include tools *.py *.md
+recursive-include tools *.py
+# 工具说明文档已迁移至 docs_unified/tools_README.md
 
 # 源代码
 recursive-include src *.py

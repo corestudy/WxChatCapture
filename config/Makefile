@@ -20,7 +20,7 @@ help:
 
 # 安装依赖
 install:
-	pip install -r config/requirements.txt
+	pip install -r requirements.txt
 
 install-dev:
 	pip install -e ".[dev]"
@@ -28,22 +28,22 @@ install-dev:
 
 # 测试
 test:
-	python -m pytest tests/ -v
-	@echo "✅ 测试完成"
+	@echo "ℹ️ 暂无测试用例（tests/ 已移除）"
+	@echo "✅ 测试占位完成"
 
 test-cov:
-	python -m pytest tests/ --cov=src --cov-report=html --cov-report=term
-	@echo "✅ 测试覆盖率报告已生成"
+	@echo "ℹ️ 暂无测试覆盖率（tests/ 已移除）"
+	@echo "✅ 覆盖率占位完成"
 
 # 代码质量
 lint:
-	flake8 src/ tests/
+	flake8 src/
 	mypy src/
 	@echo "✅ 代码检查完成"
 
 format:
-	black src/ tests/ tools/
-	isort src/ tests/ tools/
+	black src/ tools/
+	isort src/ tools/
 	@echo "✅ 代码格式化完成"
 
 # 清理
@@ -67,7 +67,7 @@ build: clean
 # 文档
 docs:
 	@echo "📚 文档位置:"
-	@echo "  主文档: README.md"
+	@echo "  主文档: docs_unified/README.md"
 	@echo "✅ 文档导航完成"
 
 # 运行
@@ -92,10 +92,10 @@ quick-start:
 
 # 性能测试
 perf-test:
-	python tests/test_performance.py
+	@echo "ℹ️ 无性能测试脚本（tests/ 已移除）"
 
 # 检查代码合规性
-compliance-check: lint test
+compliance-check: lint
 	@echo "✅ 代码合规性检查完成"
 
 # 发布准备

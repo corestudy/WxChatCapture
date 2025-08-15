@@ -88,7 +88,7 @@ def main():
     print("\n" + "=" * 50)
     if deps_ok and main_ok:
         print("🎉 所有检查通过! 可以正常运行程序")
-        print("运行命令: python src/main.py")
+        print("运行命令: python src/main.py  | 文档: docs_unified/README.md")
     else:
         print("❌ 检查未通过，请解决上述问题后重试")
     

@@ -75,20 +75,35 @@ def test_main_program():
         
         print("   检查核心功能...")
         # 检查关键属性和方法
-        required_attrs = ['is_capturing', 'region', 'save_path']
-        required_methods = ['select_region', 'start_capture', 'stop_capture']
+        # 兼容老/新接口命名
+        required_attrs = ['is_capturing', 'save_path']
+        alt_region = ['region']  # @property 存在于实例上
+        required_methods = ['start_capture', 'stop_capture']
+        alt_select = ['select_region', 'start_region_selection']
         
         for attr in required_attrs:
             if hasattr(app, attr):
                 print(f"   ✅ 属性 {attr} 存在")
             else:
                 print(f"   ❌ 属性 {attr} 缺失")
+
+        # 兼容 region 属性（可能为 @property）
+        if any(hasattr(app, a) for a in alt_region):
+            print("   ✅ 属性 region 存在")
+        else:
+            print("   ❌ 属性 region 缺失")
         
         for method in required_methods:
             if hasattr(app, method):
                 print(f"   ✅ 方法 {method} 存在")
             else:
                 print(f"   ❌ 方法 {method} 缺失")
+
+        # 兼容选择区域的两种方法名
+        if any(hasattr(app, m) for m in alt_select):
+            print("   ✅ 方法 select_region/start_region_selection 存在")
+        else:
+            print("   ❌ 方法 select_region/start_region_selection 缺失")
         
         root.destroy()
         print("   ✅ 主程序测试完成")

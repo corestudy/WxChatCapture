@@ -1,7 +1,7 @@
 # 包含额外文件到分发包中
 
 # 文档文件
-include README.md
+include ../docs_unified/README.md
 include CHANGELOG.md
 include CODE_ORGANIZATION_REPORT.md
 include LICENSE

@@ -65,9 +65,9 @@ python tools/simple_test.py
 ## 📞 获取帮助
 
 如果工具无法解决您的问题，请：
-1. 查看 [故障排除指南](../docs_unified/05_故障排除指南.md)
+1. 查看 [故障排除](./README.md#故障排除)
 2. 提交 GitHub Issue
-3. 查看项目文档
+3. 查看项目文档（./README.md）
 
 ---
 

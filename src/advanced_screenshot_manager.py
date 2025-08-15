@@ -20,6 +20,7 @@ import os
 from dataclasses import dataclass
 from collections import deque
 import weakref
+import cv2
 
 
 @dataclass
@@ -166,9 +167,15 @@ class AdvancedScreenshotManager:
         # 运行状态
         self.is_running = False
         self.task_counter = 0
+        self.save_directory = "screenshots"  # 默认保存目录
         
         # 启动后台处理线程
         self._start_background_processors()
+    
+    def set_save_directory(self, path: str):
+        """设置截图保存目录"""
+        self.save_directory = path
+        print(f"💾 截图保存目录已设置为: {path}")
     
     def _auto_configure_performance(self) -> dict:
         """自动配置性能参数"""
@@ -516,8 +523,8 @@ class AdvancedScreenshotManager:
             timestamp = time.strftime("%Y%m%d_%H%M%S", time.localtime(task.timestamp))
             filename = f"screenshot_{timestamp}_{task.task_id:04d}.png"
             
-            # 这里需要从外部传入保存路径，暂时使用默认路径
-            filepath = os.path.join("screenshots", filename)
+            # 使用配置的保存路径
+            filepath = os.path.join(self.save_directory, filename)
             
             # 确保目录存在
             os.makedirs(os.path.dirname(filepath), exist_ok=True)

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "smart-screenshot-tool"
 version = "3.0.6"
 description = "智能滚动截图工具 - 专为微信聊天记录取证和长页面截图而设计"
-readme = "README.md"
+readme = "docs_unified/README.md"
 license = {text = "MIT"}
 authors = [
     {name = "智能截图工具开发团队", email = "support@screenshot-tool.com"}
@@ -33,9 +33,9 @@ classifiers = [
 ]
 requires-python = ">=3.7"
 dependencies = [
-    "Pillow>=8.0.0",
-    "PyAutoGUI>=0.9.50",
-    "numpy>=1.19.0",
+    "Pillow>=9.0.0",
+    "PyAutoGUI>=0.9.54",
+    "numpy>=1.21.0",
     "pywinauto>=0.6.8",
     "keyboard>=0.13.5",
     "opencv-python>=4.5.0",
@@ -58,10 +58,10 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/smart-screenshot-tool"
-Documentation = "https://github.com/your-org/smart-screenshot-tool/blob/main/README.md"
-Repository = "https://github.com/your-org/smart-screenshot-tool"
-"Bug Tracker" = "https://github.com/your-org/smart-screenshot-tool/issues"
+Homepage = "https://github.com/smartscreenshot/smart-screenshot-tool"
+Documentation = "https://github.com/smartscreenshot/smart-screenshot-tool/blob/main/docs_unified/README.md"
+Repository = "https://github.com/smartscreenshot/smart-screenshot-tool"
+"Bug Tracker" = "https://github.com/smartscreenshot/smart-screenshot-tool/issues"
 
 [project.scripts]
 smart-screenshot = "src.main:main"
