@@ -618,9 +618,9 @@ class AdvancedScreenshotManager:
         self.is_running = False
         
         # 关闭线程池
-        self.capture_executor.shutdown(wait=True, timeout=5)
-        self.similarity_executor.shutdown(wait=True, timeout=5)
-        self.save_executor.shutdown(wait=True, timeout=5)
+        self.capture_executor.shutdown(wait=True)
+        self.similarity_executor.shutdown(wait=True)
+        self.save_executor.shutdown(wait=True)
         
         # 清理缓存
         self.image_cache.clear()
