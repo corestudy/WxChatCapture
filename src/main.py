@@ -331,8 +331,8 @@ class ScrollScreenshotApp:
         default_save_path = os.path.join(os.path.dirname(current_dir), "微信聊天记录")
         self.save_path = tk.StringVar(value=default_save_path)
         tk.Entry(path_frame, textvariable=self.save_path, font=("Segoe UI", 9), width=40).pack(side="left", fill="x", expand=True)
-        tk.Button(path_frame, text="📁 浏览", command=self.browse_save_path, bg=self.colors['secondary'], fg="white", font=("Segoe UI", 9), relief="flat", padx=15, pady=5).pack(side="right", padx=(10, 0))
-        tk.Button(path_frame, text="📂 打开", command=self.open_recording_folder, bg=self.colors['secondary'], fg="white", font=("Segoe UI", 9), relief="flat", padx=15, pady=5).pack(side="right", padx=(5, 0))
+        tk.Button(path_frame, text="📁 更改路径", command=self.browse_save_path, bg=self.colors['secondary'], fg="white", font=("Segoe UI", 9), relief="flat", padx=15, pady=5).pack(side="right", padx=(10, 0))
+        tk.Button(path_frame, text="📂 打开文件夹", command=self.open_save_folder, bg=self.colors['secondary'], fg="white", font=("Segoe UI", 9), relief="flat", padx=15, pady=5).pack(side="right", padx=(5, 0))
 
 
 
@@ -597,18 +597,17 @@ class ScrollScreenshotApp:
             # 每秒更新一次
             self.root.after(1000, self._update_recording_status)
 
-    def open_recording_folder(self):
-        """打开录制文件夹"""
+    def open_save_folder(self):
+        """打开保存文件夹，如果不存在则创建"""
         save_dir = Path(self.save_path.get())
-        record_dir = save_dir / "录制视频"
-        
-        if record_dir.exists():
+        try:
+            save_dir.mkdir(parents=True, exist_ok=True)
             if os.name == 'nt':  # Windows
-                os.startfile(str(record_dir))
+                os.startfile(str(save_dir))
             elif os.name == 'posix':  # macOS and Linux
-                os.system(f'open "{record_dir}"' if sys.platform == 'darwin' else f'xdg-open "{record_dir}"')
-        else:
-            messagebox.showinfo("提示", "录制文件夹尚未创建")
+                os.system(f'open "{save_dir}"' if sys.platform == 'darwin' else f'xdg-open "{save_dir}"')
+        except Exception as e:
+            messagebox.showerror("错误", f"无法打开文件夹: {e}")
 
 def main():
     root = tk.Tk()
