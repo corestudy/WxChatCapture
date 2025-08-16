@@ -31,6 +31,7 @@ import cv2
 # 项目内模块导入
 from advanced_screenshot_manager import AdvancedScreenshotManager
 from optimized_recording_manager import AdaptiveRecordingManager
+from wechat_detector import WeChatDetector
 
 
 # 项目配置
@@ -106,7 +107,7 @@ class ScrollController:
 class ScrollScreenshotApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("智能滚动截图工具 v3.0.7")
+        self.root.title("智能滚动截图工具 v3.0.8")
         self.root.geometry("1020x810")
         self.root.configure(bg="#f8fafc")
         self.root.resizable(True, True)
@@ -217,6 +218,8 @@ class ScrollScreenshotApp:
         button_frame.pack(fill="x")
         self.select_button = tk.Button(button_frame, text="🎯 选择区域", command=self.start_region_selection, bg=self.colors['primary'], fg="white", font=("Segoe UI", 10, "bold"), relief="flat", padx=20, pady=8)
         self.select_button.pack(side="left")
+        self.detect_button = tk.Button(button_frame, text="🤖 自动检测微信", command=self.auto_detect_wechat_region, bg=self.colors['secondary'], fg="white", font=("Segoe UI", 10, "bold"), relief="flat", padx=20, pady=8)
+        self.detect_button.pack(side="left", padx=(10, 0))
         self.region_info = tk.Label(button_frame, text="未选择区域", bg="#ffffff", fg=self.colors['text_light'], font=("Segoe UI", 9))
         self.region_info.pack(side="left", padx=(15, 0))
 
@@ -370,6 +373,46 @@ class ScrollScreenshotApp:
             self.status_var.set("❌ 选择区域过小，请重新选择")
             self.status_icon.config(text="🔴")
 
+    def auto_detect_wechat_region(self):
+        """自动检测微信窗口和聊天区域"""
+        self.status_var.set("🔍 正在检测微信窗口...")
+        self.root.update_idletasks() # 更新UI
+
+        try:
+            detector = WeChatDetector()
+            if not detector.find_wechat_window():
+                messagebox.showwarning("检测失败", "未找到正在运行的微信客户端。")
+                self.status_var.set("❌ 未找到微信窗口")
+                return
+
+            self.status_var.set("✅ 找到微信窗口，正在分析布局...")
+            self.root.update_idletasks()
+
+            if not detector.detect_chat_layout():
+                messagebox.showwarning("检测失败", "无法智能识别微信的聊天区域布局。")
+                self.status_var.set("❌ 无法识别聊天区域")
+                return
+
+            region = detector.get_optimal_capture_region()
+            if not region:
+                messagebox.showerror("检测失败", "成功分析布局，但无法获取最佳截图区域。")
+                self.status_var.set("❌ 获取截图区域失败")
+                return
+
+            # 更新区域变量
+            self.region_x, self.region_y, self.region_width, self.region_height = region
+            
+            # 更新UI
+            self.region_info.config(text=f"区域: {self.region_width}×{self.region_height}")
+            self.status_var.set("✅ 成功检测到微信聊天区域！")
+            self.status_icon.config(text="🟢")
+            self.start_button.config(state="normal")
+            messagebox.showinfo("检测成功", f"已自动为您选择微信聊天区域，尺寸为 {self.region_width}×{self.region_height}。")
+
+        except Exception as e:
+            messagebox.showerror("严重错误", f"微信检测过程中发生未知错误: {e}")
+            self.status_var.set(f"❌ 检测时发生严重错误")
+
     def browse_save_path(self):
         """浏览保存路径"""
         try:
@@ -518,7 +561,7 @@ class ScrollScreenshotApp:
 
         # 开始录制
         if not self.recording_manager.start_recording(record_region, output_path):
-            messagebox.showerror("错误", "无法启动录制器，请查看控制台日志。 ולא ניתן לאתחל את מקליט הווידאו")
+            messagebox.showerror("错误", "无法启动录制器，请查看控制台日志。")
             return
 
         self.is_recording = True

@@ -23,7 +23,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 # 项目配置
-__version__ = "3.0.6"
+__version__ = "3.0.8"
 __author__ = "智能截图工具开发团队"
 
 

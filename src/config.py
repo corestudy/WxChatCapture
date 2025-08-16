@@ -28,7 +28,7 @@ class AppConfig:
     
     # 应用信息
     app_name: str = "智能滚动截图工具"
-    app_version: str = "3.0.6"
+    app_version: str = "3.0.8"
     
     # 窗口设置
     window_width: int = 520

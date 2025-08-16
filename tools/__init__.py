@@ -20,7 +20,7 @@ __author__ = "智能截图工具开发团队"
 
 # 工具模块信息
 TOOLS_INFO = {
-    "version": "3.0.6",
+    "version": "3.0.8",
     "last_updated": "2024-12-19",
     "total_tools": 4,
     "status": "活跃维护中"

@@ -120,17 +120,25 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# 项目特定文件
-screenshots/
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.mp4
-*.avi
-*.mov
-*.wmv
+# ==================================================
+# 项目特定文件 (Project-specific files)
+# ==================================================
+
+# 用户生成的配置文件
+config.json
+
+# 证据数据库文件
+evidence_database.db
+
+# 日志文件和目录
+*.log
+logs/
+
+# 输出的截图和视频 (建议取消忽略以分享示例)
+# screenshots/
+# recordings/
+# *.png
+# *.mp4
 
 # 临时文件
 temp/
@@ -138,30 +146,14 @@ tmp/
 *.tmp
 *.temp
 
-# 日志文件
-*.log
-logs/
-
-# 配置文件
-config.ini
-settings.json
-
-# IDE文件
+# IDE & OS specific files
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# macOS
 .DS_Store
-.AppleDouble
-.LSOverride
 
-# Linux
-*~
+# Gemini CLI settings
+.gemini/

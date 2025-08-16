@@ -66,7 +66,7 @@ class GB29360Compliance:
             },
             'collection_method': 'automated_screenshot',
             'collection_tools': {
-                'primary_tool': 'smart-screenshot-tool-v3.0.6',
+                'primary_tool': 'smart-screenshot-tool-v3.0.8',
                 'tool_version': '3.0.6',
                 'tool_certification': 'GB/T 29360-2012 认证',
                 'calibration_date': datetime.now().strftime('%Y-%m-%d')
@@ -192,7 +192,7 @@ class GB29360Compliance:
             'system_state': 'stable',
             'acquisition_parameters': {
                 'method': 'live_capture',
-                'tools_used': ['smart-screenshot-tool-v3.0.6'],
+                'tools_used': ['smart-screenshot-tool-v3.0.8'],
                 'verification_enabled': True
             }
         }
@@ -366,7 +366,7 @@ class ForensicReportGenerator:
         return {
             'report_version': self.report_template_version,
             'generation_time': datetime.now(timezone.utc).isoformat(),
-            'generator_tool': 'WeChat Evidence Tool v3.0.6',
+            'generator_tool': 'WeChat Evidence Tool v3.0.8',
             'compliance_standards': ['GB/T 29360-2012', 'ISO/IEC 27037:2012'],
             'report_language': 'zh-CN',
             'encoding': 'UTF-8'

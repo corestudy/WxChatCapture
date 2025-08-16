@@ -17,7 +17,7 @@ __author__ = "智能截图工具开发团队"
 
 # 脚本模块信息
 SCRIPTS_INFO = {
-    "version": "3.0.6",
+    "version": "3.0.8",
     "last_updated": "2024-12-19",
     "total_scripts": 1,
     "status": "活跃维护中"

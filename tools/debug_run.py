@@ -136,7 +136,7 @@ def run_main_program():
         
         print("\n💡 可能的解决方案:")
         if "ModuleNotFoundError" in str(type(e)):
-            print("1. 安装缺失的模块: pip install pillow pyautogui numpy pywinauto keyboard opencv-python")
+            print("1. 安装缺失的模块: pip install pillow pyautogui numpy opencv-python")
         elif "tkinter" in str(e).lower():
             print("1. Tkinter问题，可能需要重新安装Python")
         else:

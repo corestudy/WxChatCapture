@@ -1,4 +1,4 @@
-# 📁 最终文件整理报告 v3.0.6
+# 📁 最终文件整理报告 v3.0.8
 
 ## 🎉 概述
 
@@ -38,7 +38,7 @@ smart-screenshot-tool/
 ├── docs_unified/
 │   ├── README.md
 │   ├── CHANGELOG.md
-│   ├── RELEASE_NOTES_v3.0.6.md
+│   ├── RELEASE_NOTES_v3.0.8.md
 │   ├── CODE_ORGANIZATION_REPORT.md
 │   ├── FINAL_FILE_ORGANIZATION_REPORT.md
 │   ├── tools_README.md
@@ -96,6 +96,6 @@ scripts\run.bat
 
 ---
 
-整理版本：v3.0.6  
+整理版本：v3.0.8  
 整理日期：2024-12-19  
 维护状态：活跃维护中

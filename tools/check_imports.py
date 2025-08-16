@@ -52,7 +52,7 @@ def check_dependencies():
         for dep in failed_deps:
             print(f"   - {dep}")
         print("\n💡 解决方案:")
-        print("pip install pillow pyautogui numpy pywinauto keyboard opencv-python")
+        print("pip install pillow pyautogui numpy opencv-python")
         return False
     else:
         print("✅ 所有依赖检查通过!")

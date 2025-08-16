@@ -20,7 +20,7 @@ __author__ = "智能截图工具开发团队"
 
 # 配置模块信息
 CONFIG_INFO = {
-    "version": "3.0.6",
+    "version": "3.0.8",
     "last_updated": "2024-12-19",
     "config_files": [
         "requirements.txt",

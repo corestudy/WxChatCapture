@@ -16,7 +16,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.backends import default_backend
 
-__version__ = "3.0.6"
+__version__ = "3.0.8"
 
 class ISO27037Compliance:
     """ISO/IEC 27037:2012 数字证据处理标准实现"""

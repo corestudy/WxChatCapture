@@ -14,7 +14,7 @@
 许可: MIT 许可证
 """
 
-__version__ = "3.0.6"
+__version__ = "3.0.8"
 __author__ = "智能截图工具开发团队"
 __email__ = "support@screenshot-tool.com"
 __license__ = "MIT"
@@ -64,8 +64,6 @@ def check_dependencies():
         'PIL', 
         'pyautogui',
         'numpy',
-        'pywinauto',
-        'keyboard',
         'cv2',
         'psutil'
     ]
