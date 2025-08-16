@@ -26,9 +26,7 @@ from tkinter import ttk, messagebox, filedialog
 import pyautogui
 import numpy as np
 from PIL import Image, ImageChops, ImageTk
-from pywinauto import Desktop
 import cv2
-import keyboard
 
 # 项目内模块导入
 from advanced_screenshot_manager import AdvancedScreenshotManager
@@ -39,98 +37,63 @@ from optimized_recording_manager import AdaptiveRecordingManager
 __version__ = "3.0.7"
 __author__ = "智能截图工具开发团队"
 
-# ===================== 滚动控制模块v2.6 =====================
-# 激活指定坐标点所在的窗口，确保后续滚动操作生效
-def activate_window_by_point(x, y):
-    try:
-        windows = Desktop(backend='uia').windows()
-        for w in windows:
-            rect = w.rectangle()
-            if rect.left <= x <= rect.right and rect.top <= y <= rect.bottom:
-                w.set_focus()
-                w.set_focus()  # 多调用一次以确保
-                return True
-    except Exception as e:
-        print(f'窗口激活失败: {e}')
-    return False
-
+# ===================== 滚动控制模块v2.7 =====================
 class ScrollController:
     def __init__(self):
         self.last_scroll_time = 0
         self.stop_flag = threading.Event()
-        self.page_mode_activated = False  # Page键模式下是否已激活窗口
-    
+        self.scroll_count = 0
+
+    def reset(self):
+        """重置滚动控制器状态"""
+        self.scroll_count = 0
+
     def dynamic_scroll(self, direction, mode, region, app_instance):
         """
-        智能滚动控制：支持Page键和鼠标滚轮两种模式
-        增加错误处理和重试机制
+        智能滚动控制：v3.0 - Page模式下前3次点击，后续仅滚动
         """
         try:
             x, y, w, h = region
-            # 根据区域高度自动计算滚动步长
-            scroll_step = max(3, min(10, h // 100))
             center_x = x + w // 2
+            click_y = y + 5  # 点击区域顶部以避免误触
             
-            # 检查区域有效性
             if w <= 0 or h <= 0:
                 app_instance.status_var.set("❌ 滚动区域无效")
                 return False
-            
+
+            # Page模式下前3次点击，后续仅滚动
             if mode == "page":
-                center_y = y + h // 2
-                if not self.page_mode_activated:
-                    # 智能窗口激活 - 增加重试机制
-                    for attempt in range(3):
-                        try:
-                            pyautogui.moveTo(center_x, center_y, duration=0.1)
-                            pyautogui.click()
-                            if activate_window_by_point(center_x, center_y):
-                                break
-                            time.sleep(0.5)  # 等待窗口激活
-                        except Exception as e:
-                            if attempt == 2:  # 最后一次尝试失败
-                                app_instance.status_var.set(f"❌ 窗口激活失败: {str(e)[:30]}")
-                                return False
-                    
-                    # 确保焦点在正确位置
-                    pyautogui.moveTo(center_x, y + 10, duration=0.1)
-                    pyautogui.click()
-                    self.page_mode_activated = True
-                    app_instance.status_var.set("✅ 窗口已激活，开始Page键滚动")
-                
-                # 发送Page键
-                key = "pagedown" if direction == "down" else "pageup"
-                keyboard.send(key)
-                
-            elif mode == "mouse":
-                center_y = y + h // 2
-                # 移动到滚动区域中心
-                pyautogui.moveTo(center_x, center_y, duration=0.1)
-                
-                # 激活窗口
-                for attempt in range(2):
+                if self.scroll_count < 3:
                     try:
+                        pyautogui.moveTo(center_x, click_y, duration=0.05)
                         pyautogui.click()
-                        if activate_window_by_point(center_x, center_y):
-                            break
+                        time.sleep(0.1)
                     except Exception as e:
-                        if attempt == 1:
-                            app_instance.status_var.set(f"❌ 鼠标滚动激活失败: {str(e)[:30]}")
-                            return False
+                        app_instance.status_var.set(f"❌ 窗口激活失败: {str(e)[:30]}")
+                        return False
                 
-                # 执行滚动
+                key = "pagedown" if direction == "down" else "pageup"
+                pyautogui.press(key)
+                self.scroll_count += 1
+
+            # 鼠标模式总是点击和滚动
+            elif mode == "mouse":
+                try:
+                    pyautogui.moveTo(center_x, click_y, duration=0.05)
+                    pyautogui.click()
+                    time.sleep(0.1)
+                except Exception as e:
+                    app_instance.status_var.set(f"❌ 窗口激活失败: {str(e)[:30]}")
+                    return False
+                
+                scroll_step = max(3, min(10, h // 100))
                 scroll_value = -scroll_step if direction == "down" else scroll_step
                 pyautogui.scroll(scroll_value)
-                
-            # 智能等待页面响应 - 根据模式优化
-            if mode == "page":
-                time.sleep(0.5)  # Page键响应快
-            else:
-                time.sleep(0.3)  # 鼠标滚轮响应更快
-            
+
+            time.sleep(0.4)
             self.last_scroll_time = time.time()
             return True
-            
+
         except pyautogui.FailSafeException:
             app_instance.status_var.set("🛑 检测到鼠标移至屏幕角落，操作已停止")
             return False
@@ -139,6 +102,7 @@ class ScrollController:
             return False
 
 # ===================== 主应用类v3.0 (集成高级管理器) =====================
+
 class ScrollScreenshotApp:
     def __init__(self, root):
         self.root = root
@@ -273,8 +237,8 @@ class ScrollScreenshotApp:
         interval_frame = tk.Frame(content_frame, bg="#ffffff")
         interval_frame.pack(fill="x")
         tk.Label(interval_frame, text="间隔(秒):", bg="#ffffff", fg="#1e293b", font=("Segoe UI", 9, "bold")).pack(side="left")
-        self.interval_var = tk.StringVar(value="2")
-        tk.Spinbox(interval_frame, from_=0.1, to=5.0, increment=0.1, width=8, textvariable=self.interval_var, font=("Segoe UI", 9)).pack(side="left", padx=(10, 0))
+        self.interval_var = tk.StringVar(value="3")
+        tk.Spinbox(interval_frame, from_=0.5, to=10.0, increment=0.5, width=8, textvariable=self.interval_var, font=("Segoe UI", 9)).pack(side="left", padx=(10, 0))
 
     def create_recording_card(self, parent):
         content_frame = self._create_card(parent, "🎥", "屏幕录制", "FPS：10-30 · 区域：选定/全屏", self.colors['error'])
@@ -412,7 +376,7 @@ class ScrollScreenshotApp:
             initial_dir = self.save_path.get()
             if not os.path.exists(initial_dir):
                 initial_dir = os.path.expanduser("~")  # 使用用户主目录作为默认
-            path = filedialog.askdirectory(initialdir=initial_dir, title="选择保存位置")
+            path = filedialog.askdirectory(parent=self.root, initialdir=initial_dir, title="选择保存位置")
             if path:
                 self.save_path.set(path)
                 self.status_var.set(f"✅ 保存位置已更新: {os.path.basename(path)}")
@@ -432,6 +396,7 @@ class ScrollScreenshotApp:
             os.makedirs(save_dir)
         self.screenshot_manager.set_save_directory(save_dir) # 设置保存目录
         
+        self.scroll_controller.reset() # 重置滚动计数器
         self.is_capturing = True
         self.capture_count = 0
         self.capture_start_time = time.time()
@@ -447,58 +412,61 @@ class ScrollScreenshotApp:
         threading.Thread(target=self.capture_process_advanced, daemon=True).start()
 
     def capture_process_advanced(self):
-        """使用高级管理器进行截图处理"""
-        self.next_scroll_event = threading.Event()
+        """使用高级管理器进行截图处理 (v3.2 - 重构循环以消除竞争条件)"""
+        # 第一次截图总是在滚动之前
+        if not self.scroll_only.get():
+            self.screenshot_manager.capture_screenshot_async(self.region, self.screenshot_callback)
 
         while self.is_capturing:
-            # 更新状态
+            # 1. 更新UI
             elapsed = time.time() - self.capture_start_time
             self.root.after(0, lambda: self.status_var.set(
                 f"📸 已捕获 {self.capture_count} 张 | 重复 {self.screenshot_manager.stats['duplicates_detected']} | {elapsed:.1f}s"))
 
-            # 触发异步截图
-            if not self.scroll_only.get():
-                self.screenshot_manager.capture_screenshot_async(self.region, self.screenshot_callback)
-            
-            # 滚动
+            # 2. 滚动
             scroll_mode = self.scroll_mode.get()
             scroll_direction = self.scroll_direction.get()
             if not self.scroll_controller.dynamic_scroll(scroll_direction, scroll_mode, self.region, self):
                 self.root.after(0, lambda: self.status_var.set("❌ 滚动失败，自动停止"))
                 break
 
-            # 等待截图回调完成或超时
+            # 3. 等待内容加载
             wait_time = float(self.interval_var.get())
-            self.next_scroll_event.wait(timeout=wait_time)
-            self.next_scroll_event.clear()
+            time.sleep(wait_time)
 
+            # 在等待后检查是否被外部停止
+            if not self.is_capturing:
+                break
+
+            # 4. 截图
+            if not self.scroll_only.get():
+                self.screenshot_manager.capture_screenshot_async(self.region, self.screenshot_callback)
+
+        # 循环结束后，安排最终的清理工作
         self.root.after(0, self.stop_capture)
 
     def screenshot_callback(self, screenshot, task, success, result):
-        """处理异步截图结果的回调函数"""
+        """处理异步截图结果的回调函数 (v3.2 - 简化)"""
         if not self.is_capturing:
             return
 
         if success:
             self.capture_count += 1
-            # 这里可以添加一个小的预览图更新，如果需要的话
+        elif result == "重复内容":
+            if self.auto_detect.get():
+                self.root.after(0, lambda: self.status_var.set("🎯 检测到重复内容，自动停止"))
+                self.is_capturing = False # 停止循环
         else:
-            # 处理重复内容或错误
-            if result == "重复内容":
-                if self.auto_detect.get():
-                    self.root.after(0, lambda: self.status_var.set("🎯 检测到重复内容，自动停止"))
-                    self.is_capturing = False # 停止循环
-            else:
-                print(f"截图任务失败: {result}")
-
-        # 通知主循环可以进行下一次滚动
-        self.next_scroll_event.set()
+            print(f"截图任务失败: {result}")
 
     def stop_capture(self):
-        """停止截图"""
+        """停止截图 (v3.1 - 确保UI总能重置)"""
         if not self.is_capturing:
+            # 即使已经停止，也确保UI状态正确
+            self.start_button.config(state="normal")
+            self.stop_button.config(state="disabled")
             return
-            
+
         self.is_capturing = False
         self.scroll_controller.stop_flag.set()
         
@@ -506,16 +474,17 @@ class ScrollScreenshotApp:
         self.start_button.config(state="normal")
         self.stop_button.config(state="disabled")
         
-        if self.capture_count > 0:
+        # 检查状态变量，避免覆盖“自动停止”的消息
+        final_message = self.status_var.get()
+        if "自动停止" in final_message:
+            pass # 保持现有消息
+        elif self.capture_count > 0:
             elapsed = time.time() - self.capture_start_time
             self.status_var.set(f"✅ 完成！共截图 {self.capture_count} 张，用时 {elapsed:.1f}s")
             self.status_icon.config(text="🟢")
         else:
             self.status_var.set("⏹️ 已停止")
             self.status_icon.config(text="🟡")
-        
-        # 重置滚动控制器状态
-        self.scroll_controller.page_mode_activated = False
 
     def start_recording(self):
         """开始屏幕录制 (高级版)"""
